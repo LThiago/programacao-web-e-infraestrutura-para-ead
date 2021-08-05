@@ -20,18 +20,24 @@ public class Professor {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    // @Column(name = "cadastro", unique = true)
-    // private String cadastro;
-
-    @Column(name = "nome", nullable = false, unique = true)
+    @Column(name = "nome", nullable = false)
     private String nome;
+
+    @Column(name = "formacao", nullable = false)
+    private String formacao;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    public Professor(String nome, String email) {
-        // this.cadastro = UUID.randomUUID().toString();
+    // @Column(name = "matricula", nullable = false, unique = true)
+    // private String matricula;
+
+    public Professor(String nome, String email, String formacao) {
         this.nome = nome;
         this.email = email;
+        this.formacao = formacao;
+
+        // TODO - Encontrar uma forma de implementar isso corretamente.
+        // this.matricula = UUID.randomUUID().toString();
     }
 }

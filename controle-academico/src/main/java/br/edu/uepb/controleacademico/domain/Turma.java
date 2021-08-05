@@ -1,10 +1,13 @@
 package br.edu.uepb.controleacademico.domain;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -20,14 +23,24 @@ public class Turma {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    // @Column(name = "codigo", nullable = false, unique = true)
-    // private String codigo;
+    @Column(name = "disciplina", nullable = false)
+    private String disciplina;
 
-    @Column(name = "nome", nullable = false, unique = true)
-    private String nome;
+    @Column(name = "sala", nullable = false)
+    private String sala;
 
-    public Turma(String nome, String email) {
-        // this.codigo = UUID.randomUUID().toString();
-        this.nome = nome;
+    @ManyToMany
+    Set<Aluno> alunos;
+
+    // @OneToMany
+    // Set<Professor> professor;
+
+    public Turma(String disciplina, String sala) {
+        this.disciplina = disciplina;
+        this.sala = sala;
+    }
+
+    public void addAluno(Aluno aluno) {
+        this.alunos.add(aluno);
     }
 }
