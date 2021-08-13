@@ -7,12 +7,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
 @NoArgsConstructor
-@Data
-@Entity(name = "coffees")
+@Entity
 @Table(name = "coffees")
 public class Coffee {
 
@@ -20,10 +22,15 @@ public class Coffee {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name")
     private String name;
 
-    public Coffee(String name) {
+    @Column(name = "price")
+    private double price;
+
+    public Coffee(String name, double price) {
+        // this.id = UUID.randomUUID().toString();
         this.name = name;
+        this.price = price;
     }
 }
