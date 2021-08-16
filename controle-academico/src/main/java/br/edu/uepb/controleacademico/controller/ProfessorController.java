@@ -15,36 +15,43 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.uepb.controleacademico.domain.Professor;
 import br.edu.uepb.controleacademico.repository.ProfessorRepository;
-import lombok.AllArgsConstructor;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/professores")
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@Api(value = "Professor")
 public class ProfessorController {
 
+    @Autowired
     private ProfessorRepository professorRepository;
 
     @GetMapping
+    @ApiOperation(value = "Busca uma lista de todos os professores")
     public List<Professor> getProfessores() {
         return professorRepository.findAll();
     }
 
     @GetMapping("/{id}")
+    @ApiOperation(value = "Busca um professor pelo seu identificador")
     public Optional<Professor> getProfessorById(@PathVariable Long id) {
         return professorRepository.findById(id);
     }
 
     @PostMapping
+    @ApiOperation(value = "Cria um novo professor")
     public Professor createProfessor(@RequestBody Professor professor) {
         return professorRepository.save(professor);
     }
 
     @PutMapping("/{id}")
+    @ApiOperation(value = "Atualiza um professor a partir do seu identificador")
     public Professor updateProfessor(@PathVariable("id") Long id, @RequestBody Professor professor) {
         return professorRepository.save(professor);
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "Exclui um professor a partir do seu identificador")
     public void deleteProfessor(@PathVariable Long id) {
         professorRepository.delete(professorRepository.findById(id).get());
     }
