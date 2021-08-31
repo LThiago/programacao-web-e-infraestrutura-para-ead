@@ -2,6 +2,8 @@ package br.edu.uepb.diarioeletronico.controller;
 
 import br.edu.uepb.diarioeletronico.domain.Aluno;
 import br.edu.uepb.diarioeletronico.repository.AlunoRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,32 +20,38 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/alunos")
+@Api(value = "Aluno")
 public class AlunoController {
 
     @Autowired
     private AlunoRepository alunoRepository;
 
     @PostMapping
+    @ApiOperation(value = "Cria um novo aluno")
     public Aluno createAluno(@RequestBody Aluno aluno) {
         return alunoRepository.save(aluno);
     }
 
     @GetMapping
+    @ApiOperation(value = "Busca uma lista de todos os alunos")
     public List<Aluno> getAlunos() {
         return alunoRepository.findAll();
     }
 
     @GetMapping("/{id}")
+    @ApiOperation(value = "Busca um aluno pelo seu identificador")
     public Optional<Aluno> getAlunoById(@PathVariable Long id) {
         return alunoRepository.findById(id);
     }
 
     @PutMapping(value = "/{id}")
+    @ApiOperation(value = "Atualiza um aluno a partir do seu identificador")
     public Aluno updateAluno(@PathVariable("id") Long id, @RequestBody Aluno aluno) {
         return alunoRepository.save(aluno);
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "Exclui um aluno a partir do seu identificador")
     public void deleteAluno(@PathVariable Long id) {
         alunoRepository.delete(alunoRepository.findById(id).get());
     }
