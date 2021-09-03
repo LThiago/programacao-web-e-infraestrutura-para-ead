@@ -1,14 +1,22 @@
 package br.edu.uepb.diarioeletronico.controller;
 
 import br.edu.uepb.diarioeletronico.domain.Turma;
-import br.edu.uepb.diarioeletronico.repository.TurmaRepository;
+import br.edu.uepb.diarioeletronico.dto.TurmaDTO;
+import br.edu.uepb.diarioeletronico.dto.GenericResponseErrorDTO;
+import br.edu.uepb.diarioeletronico.exceptions.ExistingTurmaSameNameException;
+import br.edu.uepb.diarioeletronico.mapper.TurmaMapper;
+import br.edu.uepb.diarioeletronico.services.TurmaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javassist.NotFoundException;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,40 +27,54 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping("/turmas")
+@RequestMapping(value = "/turmas", produces = MediaType.APPLICATION_JSON_VALUE + "; charset=UTF-8")
 @Api(value = "Turma")
 public class TurmaController {
 
     @Autowired
-    private TurmaRepository turmaRepository;
+    private TurmaService turmaService;
+
+    @Autowired
+    private TurmaMapper turmaMapper;
 
     @PostMapping
     @ApiOperation(value = "Cria uma nova turma")
-    public Turma createTurma(@RequestBody Turma turma) {
-        return turmaRepository.save(turma);
+    public ResponseEntity<?> createTurma(@RequestBody TurmaDTO turmaDTO) {
+        try {
+            Turma turma = turmaMapper.convertFromTurmaDTO(turmaDTO);
+            return new ResponseEntity<>(turmaService.createTurma(turma), HttpStatus.CREATED);
+        } catch (ExistingTurmaSameNameException e) {
+            return ResponseEntity.badRequest().body(new GenericResponseErrorDTO(e.getMessage()));
+        }
     }
 
     @GetMapping
     @ApiOperation(value = "Busca uma lista de todas as turmas")
-    public List<Turma> getTurmas() {
-        return turmaRepository.findAll();
+    public List<TurmaDTO> getTurmas() {
+        List<Turma> turmas = turmaService.listAllTurmas();
+        return turmas.stream().map(turmaMapper::convertToTurmaDTO).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Busca uma turma pelo seu identificador")
-    public Optional<Turma> getTurmaById(@PathVariable Long id) {
-        return turmaRepository.findById(id);
+    public ResponseEntity<?> getTurmaById(@PathVariable Long id) {
+        try {
+            return new ResponseEntity<>(turmaMapper.convertToTurmaDTO(turmaService.findById(id)), HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return ResponseEntity.badRequest().body(new GenericResponseErrorDTO(e.getMessage()));
+        }
     }
 
-    @PutMapping(value = "/{id}")
+    @PutMapping("/{id}")
     @ApiOperation(value = "Atualiza uma turma a partir do seu identificador")
-    public Turma updateTurma(@PathVariable("id") Long id, @RequestBody Turma turma) {
-        return turmaRepository.save(turma);
+    public TurmaDTO updateTurma(@PathVariable("id") Long id, @RequestBody TurmaDTO turmaDTO) {
+        Turma turma = turmaMapper.convertFromTurmaDTO(turmaDTO);
+        return turmaMapper.convertToTurmaDTO(turmaService.updateTurma(id, turma));
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Exclui uma turma a partir do seu identificador")
     public void deleteTurma(@PathVariable Long id) {
-        turmaRepository.delete(turmaRepository.findById(id).get());
+        turmaService.deleteTurma(id);
     }
 }
