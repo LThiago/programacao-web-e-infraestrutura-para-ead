@@ -1,15 +1,9 @@
-Crie uma aplicação Spring Boot com as rotas básicas para um CRUD de professores, alunos e turmas, com a seguinte lógica de mapeamento: Um professor dá aula em várias turmas, e um aluno está em várias turmas.
+Exercício 4
 
-Atualização: Crie uma rota para vincular um aluno a um professor. Um possível design sugerido pode ser: (Você também pode enviar os dados pelo corpo da requisição)
+Atividade em dupla ou individual. No caso de dupla, é necessário apenas um integrante realizar a entrega.
 
-PUT turmas/{turmaId}/matricularAluno/{alunoId}
+Projete dois modelos de aplicações fictícias para a Web utilizando os modelos SOA e Microsserviços.
 
-Configure um banco de dados em memória para armazenar seus dados. 
+Novamente uma será a sua escolha e a segunda deve às seguintes especificações do exercício anterior.
 
-Utilize o link abaixo para conhecer sobre o mapeamento com banco de dados e veja qual é o mais adequado para se utilizar.
-
-https://www.baeldung.com/jpa-many-to-many
-
-Adicione o projeto Spring Security, promovendo autenticação com JWT Token à sua aplicação, conforme tutorial passado em aula.
-
-Faça com que um usuário tenha o papel de professor ou de aluno (pode-se usar ENUM ou herança, conforme a sua escolha), e que a rota de cadastro seja aberta.
+Compare as aplicações utilizando os critérios discutidos e também do ponto de vista da evolução dos modelos básicos.
